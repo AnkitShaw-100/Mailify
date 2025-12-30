@@ -6,6 +6,7 @@ import emailRoutes from "./routes/email.js";
 import auth from "./middlewares/auth.js";
 import errorHandler from "./middlewares/errorMiddleware.js";
 import cors from "cors";
+import { corsOptions } from "./config/cors.js";
 
 // Dotenv cofig
 dotenv.config();
@@ -13,8 +14,9 @@ dotenv.config();
 // Connect DB
 connectDB();
 
+
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/emails", auth, emailRoutes);
