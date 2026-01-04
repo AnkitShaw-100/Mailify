@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { IoMdArrowBack, IoMdMore, IoMdStar, IoMdStarOutline } from "react-icons/io";
+import { MdDeleteOutline, MdOutlineReport, MdOutlineMarkEmailUnread, MdOutlinePrint, MdOutlineOpenInNew } from "react-icons/md";
+import { BiArchiveIn } from "react-icons/bi";
+import Avatar from "react-avatar";
 
 const MailDetail = ({ email, onClose }) => {
   const [showReply, setShowReply] = useState(false);
@@ -7,6 +11,7 @@ const MailDetail = ({ email, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [starred, setStarred] = useState(false);
 
   // Fetch latest email with replies
   const fetchMail = async () => {
@@ -66,180 +71,214 @@ const MailDetail = ({ email, onClose }) => {
     setLoading(false);
   };
 
+  const formatDate = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
-    <div className="w-full h-full bg-white rounded-lg shadow-md border border-gray-200 flex flex-col">
+    <div className="w-full h-full bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col overflow-hidden">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-gray-50 rounded-t-lg">
-        <div className="flex items-center gap-2">
-          {/* Back */}
+      <div className="flex items-center justify-between px-4 sm:px-6 py-2 border-b border-gray-200 bg-white sticky top-0 z-10">
+        <div className="flex items-center gap-1">
           <button
             onClick={onClose}
-            className="text-gray-600 hover:bg-gray-200 rounded-full p-2 transition"
-            title="Back"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            title="Back to inbox"
           >
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
+            <IoMdArrowBack size={20} className="text-gray-600" />
           </button>
-          {/* Archive */}
           <button
-            className="text-gray-600 hover:bg-gray-200 rounded-full p-2 transition"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors hidden sm:block"
             title="Archive"
           >
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <rect x="3" y="8" width="18" height="13" rx="2" />
-              <polyline points="3 8 12 13 21 8" />
-            </svg>
+            <BiArchiveIn size={20} className="text-gray-600" />
           </button>
-          {/* Delete */}
           <button
-            className="text-gray-600 hover:bg-gray-200 rounded-full p-2 transition"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors hidden sm:block"
+            title="Report spam"
+          >
+            <MdOutlineReport size={20} className="text-gray-600" />
+          </button>
+          <button
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
             title="Delete"
           >
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
-            </svg>
+            <MdDeleteOutline size={20} className="text-gray-600" />
+          </button>
+          <div className="w-px h-6 bg-gray-300 mx-1 hidden md:block"></div>
+          <button
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors hidden md:block"
+            title="Mark as unread"
+          >
+            <MdOutlineMarkEmailUnread size={20} className="text-gray-600" />
+          </button>
+          <button
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            title="More"
+          >
+            <IoMdMore size={20} className="text-gray-600" />
           </button>
         </div>
-        <div className="text-xs text-gray-500">
-          {email.createdAt ? new Date(email.createdAt).toLocaleString() : ""}
-        </div>
-      </div>
 
-      {/* Subject */}
-      <div className="px-8 pt-6 pb-3 border-b border-gray-100">
-        <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-          {email.subject}
-          <svg
-            width="20"
-            height="20"
-            fill="none"
-            stroke="#eab308"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
+        <div className="flex items-center gap-1">
+          <button
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors hidden sm:block"
+            title="Print"
           >
-            <polygon points="12 17.27 18.18 21 15.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 8.46 13.97 5.82 21 12 17.27" />
-          </svg>
-        </h2>
+            <MdOutlinePrint size={20} className="text-gray-600" />
+          </button>
+          <button
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors hidden sm:block"
+            title="Open in new window"
+          >
+            <MdOutlineOpenInNew size={20} className="text-gray-600" />
+          </button>
+        </div>
       </div>
 
-      {/* Sender Row */}
-      <div className="flex items-start px-8 py-4 border-b border-gray-100">
-        <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-lg font-bold text-blue-700 mr-3">
-          {email.from?.charAt(0).toUpperCase()}
+      {/* Email Content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Subject */}
+        <div className="px-4 sm:px-6 md:px-8 pt-6 pb-4">
+          <div className="flex items-start justify-between gap-4">
+            <h2 className="text-xl sm:text-2xl font-normal text-gray-900 leading-tight flex-1">
+              {email.subject || "No Subject"}
+            </h2>
+            <button
+              onClick={() => setStarred(!starred)}
+              className="p-1 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
+              title={starred ? "Unstar" : "Star"}
+            >
+              {starred ? (
+                <IoMdStar size={20} className="text-yellow-500" />
+              ) : (
+                <IoMdStarOutline size={20} className="text-gray-400" />
+              )}
+            </button>
+          </div>
         </div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-sm font-semibold text-gray-900">
-                {email.from}
-              </span>{" "}
-              <span className="text-xs text-gray-500">
-                &lt;{email.from}&gt;
+
+        {/* Sender Info */}
+        <div className="flex items-start gap-3 sm:gap-4 px-4 sm:px-6 md:px-8 pb-6 border-b border-gray-200">
+          <Avatar 
+            name={email.from || "User"} 
+            size="40" 
+            round={true}
+            className="flex-shrink-0"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-gray-900 text-sm truncate">
+                  {email.from}
+                </p>
+                <p className="text-xs text-gray-600">
+                  to <span className="text-gray-900">{email.to}</span>
+                </p>
+              </div>
+              <span className="text-xs text-gray-500 whitespace-nowrap">
+                {formatDate(email.createdAt)}
               </span>
             </div>
-            <span className="text-xs text-gray-500">
-              {email.createdAt
-                ? new Date(email.createdAt).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                : ""}
-            </span>
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
-            to <span className="font-medium text-gray-700">{email.to}</span>
           </div>
         </div>
-      </div>
 
-      {/* Conversation (original + replies) */}
-      <div className="flex-1 overflow-y-auto px-8 pt-4 pb-6 text-gray-800 whitespace-pre-line text-[15px] leading-relaxed">
-        {/* Original message */}
-        <div className="mb-6">
-          <div className="font-semibold text-gray-900">{mailData.from}</div>
-          <div className="text-xs text-gray-500 mb-1">
-            {mailData.createdAt
-              ? new Date(mailData.createdAt).toLocaleString()
-              : ""}
+        {/* Message Body - Original + Replies */}
+        <div className="px-4 sm:px-6 md:px-8 py-6">
+          {/* Original message */}
+          <div className="mb-8">
+            <div className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
+              {mailData.body || "No message content"}
+            </div>
           </div>
-          <div>{mailData.body}</div>
-        </div>
-        {/* Replies */}
-        {mailData.replies && mailData.replies.length > 0 && (
-          <div className="space-y-6">
-            {mailData.replies.map((reply, idx) => (
-              <div key={idx} className="border-l-4 border-blue-200 pl-4">
-                <div className="font-semibold text-blue-700">{reply.from}</div>
-                <div className="text-xs text-gray-400 mb-1">
-                  {reply.createdAt
-                    ? new Date(reply.createdAt).toLocaleString()
-                    : ""}
+
+          {/* Replies */}
+          {mailData.replies && mailData.replies.length > 0 && (
+            <div className="space-y-6">
+              {mailData.replies.map((reply, idx) => (
+                <div key={idx} className="border-l-4 border-blue-400 pl-4 sm:pl-6 py-2">
+                  <div className="flex items-start gap-3 mb-3">
+                    <Avatar 
+                      name={reply.from || "User"} 
+                      size="32" 
+                      round={true}
+                      className="flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-blue-700 text-sm">{reply.from}</p>
+                      <p className="text-xs text-gray-500">{formatDate(reply.createdAt)}</p>
+                    </div>
+                  </div>
+                  <div className="text-gray-800 text-sm sm:text-base whitespace-pre-wrap leading-relaxed">
+                    {reply.body}
+                  </div>
                 </div>
-                <div>{reply.body}</div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Reply Section */}
-      <div className="border-t border-gray-200 px-8 py-4 bg-gray-50">
+      <div className="border-t border-gray-200 px-4 sm:px-6 md:px-8 py-4 bg-gray-50">
         {success && (
-          <div className="text-green-600 text-sm mb-2 font-medium">
-            {success}
+          <div className="mb-3 px-4 py-2 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm flex items-center gap-2">
+            <span className="font-medium">✓</span>
+            <span>{success}</span>
           </div>
         )}
-        {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
+        {error && (
+          <div className="mb-3 px-4 py-2 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm flex items-center gap-2">
+            <span className="font-medium">⚠</span>
+            <span>{error}</span>
+          </div>
+        )}
         {!showReply ? (
-          <button
-            onClick={() => setShowReply(true)}
-            className="px-6 py-2 text-sm border border-gray-300 text-gray-700 rounded-full hover:bg-gray-100 transition shadow-sm"
-          >
-            ↩️ Reply
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowReply(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-lg font-medium text-sm transition-colors"
+            >
+              Reply
+            </button>
+            <button
+              className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-lg font-medium text-sm transition-colors"
+            >
+              Forward
+            </button>
+          </div>
         ) : (
           <div className="animate-fade-in">
             <textarea
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Write your reply..."
-              className="w-full h-28 border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full h-32 border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white"
               disabled={loading}
+              autoFocus
             />
             <div className="mt-3 flex gap-2">
               <button
-                className="px-5 py-2 bg-blue-600 text-white rounded-full text-sm hover:bg-blue-700 transition shadow-sm"
+                className="px-5 py-2 bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-lg text-sm font-medium transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={handleReplySend}
-                disabled={loading}
+                disabled={loading || !replyText.trim()}
               >
                 {loading ? "Sending..." : "Send"}
               </button>
               <button
-                onClick={() => setShowReply(false)}
-                className="px-5 py-2 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition"
+                onClick={() => {
+                  setShowReply(false);
+                  setReplyText("");
+                }}
+                className="px-5 py-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-lg text-sm font-medium transition-colors"
                 disabled={loading}
               >
                 Cancel

@@ -35,13 +35,13 @@ const Sidebar = ({ onEmailSent, onSelect }) => {
   return (
     <div className="hidden md:block w-64 md:w-[15%] min-w-[64px] max-w-xs transition-all duration-300 bg-white h-full">
       {/* Compose button */}
-      <div className="p-3 pl-3">
+      <div className="px-6 lg:px-8 py-3">
         <button
-          className="flex items-center gap-2 bg-[#C2E7FF] p-4 rounded-2xl hover:shadow-md"
+          className="flex items-center gap-2 bg-[#C2E7FF] p-4 rounded-2xl w-full justify-center lg:justify-start"
           onClick={() => setShowCompose(true)}
         >
           <LuPencil size={"24px"} />
-          Compose
+          <span className="hidden lg:inline">Compose</span>
         </button>
       </div>
       {showCompose && (
@@ -58,17 +58,16 @@ const Sidebar = ({ onEmailSent, onSelect }) => {
             return (
               <div
                 key={idx}
-                className={`${
-                  selected === idx
+                className={`${selected === idx
                     ? "bg-[#C2E7FF] text-black"
                     : "hover:bg-gray-200 hover:text-black"
-                } flex pl-10 py-1 rounded-r-full items-center gap-4 my-2  hover:cursor-pointer px-10`}
+                  } flex pl-6 lg:pl-8 py-3 rounded-r-full items-center gap-4 my-2 hover:cursor-pointer px-4 lg:px-6`}
               >
                 {item.icon}
-                <p className={selected === idx ? "font-bold" : ""}>
+                <p className={`${selected === idx ? "font-bold" : ""} hidden lg:block`}>
                   {item.text}
                 </p>
-                <span className="ml-4 text-gray-400 text-xs">(No drafts)</span>
+                <span className="ml-4 text-gray-400 text-xs hidden lg:inline">(No drafts)</span>
               </div>
             );
           }
@@ -79,21 +78,20 @@ const Sidebar = ({ onEmailSent, onSelect }) => {
                 if (onSelect) onSelect(idx);
               }}
               key={idx}
-              className={`${
-                selected === idx
+              className={`${selected === idx
                   ? "bg-[#C2E7FF] text-black"
                   : "hover:bg-gray-200 hover:text-black"
-              } flex pl-10 py-1 rounded-r-full items-center gap-4 my-2  hover:cursor-pointer px-10`}
+                } flex pl-6 lg:pl-8 py-3 rounded-r-full items-center gap-4 my-2 hover:cursor-pointer px-4 lg:px-6`}
             >
               {item.icon}
-              <p className={selected === idx ? "font-bold" : ""}>{item.text}</p>
+              <p className={`${selected === idx ? "font-bold" : ""} hidden lg:block`}>{item.text}</p>
             </div>
           );
         })}
         {/* More button  */}
-        <div className="flex items-center pl-10 gap-4 cursor-pointer hover:bg-gray-200 rounded-r-full py-1">
+        <div className="flex items-center pl-6 lg:pl-8 gap-4 cursor-pointer hover:bg-gray-200 rounded-r-full py-3 px-4 lg:px-6">
           <MdOutlineKeyboardArrowDown size={"20px"} />
-          <span>More</span>
+          <span className="hidden lg:inline">More</span>
         </div>
       </div>
       <div></div>
